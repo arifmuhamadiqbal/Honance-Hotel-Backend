@@ -1,5 +1,7 @@
 import Users from "../models/UsersModel.js";
 
+
+// get user by username
 export const getUsersByUsername = async (req, res) => {
     try {
         const uName = req.body.username;
@@ -18,6 +20,7 @@ export const getUsersByUsername = async (req, res) => {
     }
 };
 
+// add user
 export const addUsers = async (req, res) => {
     const uName = req.body.username;
     const uEmail = req.body.email;

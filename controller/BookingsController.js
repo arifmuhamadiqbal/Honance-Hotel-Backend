@@ -1,5 +1,6 @@
 import Bookings from "../models/BookingsModel.js";
 
+// get bookings
 export const getBookings = async (req, res) => {
     try {
         let response = await Bookings.sequelize.query(
@@ -13,6 +14,7 @@ export const getBookings = async (req, res) => {
     }
 };
 
+// add booking
 export const bookRoom = async (req, res) => {
     let bookDate = new Date().toISOString().slice(0, 10);
     const id_room = req.body.id_room;
