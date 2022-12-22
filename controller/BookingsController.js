@@ -6,6 +6,7 @@ export const getBookings = async (req, res) => {
             "SELECT * FROM bookings JOIN rooms ON bookings.id_room = rooms.id_room ORDER BY id_booking ASC"
         );
         if (!response) return res.status(404).json({ msg: "Data Not Found !" });
+        console.log(response);
         res.status(200).json(response[0]);
     } catch (error) {
         console.log(error.message);
