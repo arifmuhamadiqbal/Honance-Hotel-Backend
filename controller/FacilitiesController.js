@@ -1,9 +1,14 @@
 import Facilities from "../models/FacilitiesModel.js";
+import Rooms from "../models/RoomsModel.js";
 
 // get facilities
 export const getFacilities = async (req, res) => {
     try {
-        let response = await Facilities.findAll();
+        let response = await Facilities.findAll(
+           /*  {
+            include: Rooms
+        } */
+        );
         if (!response) return res.status(404).json({msg: "Data not found !"});
         console.log(response);
         res.status(200).json(response);
