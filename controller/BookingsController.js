@@ -13,12 +13,13 @@ export const getBookings = async (req, res) => {
 };
 
 export const bookRoom = async (req, res) => {
-    const id_room = req.params.id_room;
+    const id_room = req.body.idroom;
     const bUsername = req.body.username;
     const bEmail = req.body.email;
     const bPhone = req.body.nohp;
     const bCheckin = req.body.checkin;
     const bCheckout = req.body.checkout;
+
     try {
         const booking = await Bookings.create({
             id_room: id_room,
@@ -28,7 +29,8 @@ export const bookRoom = async (req, res) => {
             date_in: bCheckin,
             date_out: bCheckout,
         });
-        return res.json(booking);
+        console.log(booking);
+        return res.status(200).json({ msg: "Berhasil Dibooking" });
     } catch (error) {
         return res.status(500).json(error.message);
     }
