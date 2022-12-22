@@ -1,7 +1,4 @@
 import Rooms from "../models/RoomsModel.js";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
 
 // get all room
 export const getRooms = async (req, res) => {
@@ -14,51 +11,9 @@ export const getRooms = async (req, res) => {
     }
 };
 
-// upload room data to database
-// multer configuration
-/* let formatName = new Date().toISOString().slice(0, 10);
-
-const storage = multer.diskStorage({
-    destination: "./public/images",
-    filename: function (req, file, callback) {
-        callback(null, formatName + "-" + file.originalname);
-    },
-});
-
-const upload = multer({ storage: storage }).single("file");
-
-roomsRoute.post("/addRoom", upload, async (req, res) => {
-    let codeRoom = req.body.kodeKamar;
-    let nameRoom = req.body.namaKamar;
-    let descriptionRoom = req.body.deskripsiKamar;
-    let priceRoom = req.body.hargaKamar;
-    let photoRoom = formatName + "-" + req.body.filename;
-
-    await Rooms.sequelize.query(
-        `INSERT INTO rooms (room_code, room_name, room_description, room_price, room_photo)
-    VALUES ("${codeRoom}", "${nameRoom}", "${descriptionRoom}", ${priceRoom}, "${photoRoom}");`,
-        (err, rows) => {
-            if (err) return res.status(500).json(err);
-            console.log("Data berhasil dihapus !");
-            return res.status(200).json(rows);
-        }
-    );
-}); */
-
 // add Room
-export const uploadMulter = async (req, res) => {
-    let formatName = new Date().toISOString().slice(0, 10);
-
-    const storage = multer.diskStorage({
-        destination: "./public/images",
-        filename: function (req, file, callback) {
-            callback(null, formatName + "-" + file.originalname);
-        },
-    });
-    multer({ storage: storage }).single("file");
-}
-
 export const addRoom = async (req, res) => {
+    let formatName = new Date().toISOString().slice(0, 10);
     let codeRoom = req.body.kodeKamar;
     let nameRoom = req.body.namaKamar;
     let descriptionRoom = req.body.deskripsiKamar;

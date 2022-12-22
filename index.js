@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import usersRoute from "./routes/UsersRoute.js";
 import roomsRoute from "./routes/RoomsRoute.js";
+import facilitiesRoute from "./routes/FacilitiesRoute.js";
 import bookingsRoute from "./routes/BookingsRoute.js";
 import db from "./config/Database.js";
 
@@ -14,6 +15,7 @@ app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}));
 app.use(usersRoute);
 app.use(roomsRoute);
+app.use(facilitiesRoute);
 app.use(bookingsRoute);
 
 app.listen(port, () => {

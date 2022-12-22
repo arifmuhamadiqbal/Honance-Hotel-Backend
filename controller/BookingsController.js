@@ -14,14 +14,17 @@ export const getBookings = async (req, res) => {
 };
 
 export const bookRoom = async (req, res) => {
-    const id_room = req.params.id_room;
+    let bookDate = new Date().toISOString().slice(0, 10);
+    const id_room = req.body.id_room;
     const bUsername = req.body.username;
     const bEmail = req.body.email;
     const bPhone = req.body.nohp;
     const bCheckin = req.body.checkin;
     const bCheckout = req.body.checkout;
+    const bookingFormat = bookDate + "-" + bUsername + "-" + bPhone;
     try {
         const booking = await Bookings.create({
+            booking_code: bookingFormat,
             id_room: id_room,
             user_name: bUsername,
             user_email: bEmail,
