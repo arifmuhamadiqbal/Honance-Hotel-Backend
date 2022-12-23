@@ -1,4 +1,5 @@
 import Rooms from "../models/RoomsModel.js";
+import { Op } from "sequelize";
 import Facilities from "../models/FacilitiesModel.js";
 import fs from "fs";
 
@@ -8,9 +9,40 @@ export const getRooms = async (req, res) => {
         let response = await Rooms.findAll({
             include: {
                 model: Facilities,
-                attributes: ["name_facilities"]
-            }
-        })
+                attributes: ["name_facilities"],
+            },
+        });
+        if (!response) return res.status(404).json({ msg: "Data Not Found !" });
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+//get room by ID
+export const getRoomByID = async (req, res) => {
+    try {
+        const response = await Rooms.findOne({
+            where: {
+                id_room: req.params.id_room,
+            },
+        });
+        if (!response) return res.status(404).json({ msg: "Data Not Found !" });
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+export const searchRoom = async (req, res) => {
+    try {
+        const response = await Rooms.findAll({
+            where: {
+                room_price: {
+                    [Op.lte]: req.params.range_harga,
+                },
+            },
+        });
         if (!response) return res.status(404).json({ msg: "Data Not Found !" });
         res.status(200).json(response);
     } catch (error) {
@@ -69,8 +101,13 @@ export const addRoom = async (req, res) => {
             console.log("Data berhasil dihapus !");
             return res.status(200).json(rows);
         }
+<<<<<<< HEAD
     ); */
 }
+=======
+    );
+};
+>>>>>>> 0dd5f69646504871ef31c376c64662f6673526d5
 
 // update room by Id
 export const updateRoomById = async (req, res) => {
@@ -111,7 +148,9 @@ export const deleteRoomById = async (req, res) => {
         await rooms.save();
         return res.json({ msg: "Room has been deleted !" });
     } catch (error) {
-        return res.status(500).json({ error: `Error ! cannot delete : ${error}` });
+        return res
+            .status(500)
+            .json({ error: `Error ! cannot delete : ${error}` });
     }
 };
 
@@ -151,8 +190,13 @@ const { room_code, room_name, room_description, room_price } = req.body;
 try {
     await Rooms.findOne({
         where: {
+<<<<<<< HEAD
             id_room: req.params.id_room
         }
+=======
+            id_room: req.params.id_room,
+        },
+>>>>>>> 0dd5f69646504871ef31c376c64662f6673526d5
     });
     rooms.room_code = room_code;
     rooms.room_name = room_name;
@@ -161,8 +205,46 @@ try {
     rooms.room_photo = fileName;
     rooms.room_photo_path = url;
 
+<<<<<<< HEAD
     await rooms.save();
     return res.status(200).json({ msg: "Room has been updated !" });
 } catch (error) {
     return res.status(500).json({ error: "Error ! cannot update" });
 } */
+=======
+        if (!allowedExt.includes(ext.toLocaleLowerCase()))
+            return res.status(442).json({ msg: "Image extension not allowed" });
+        if (fileSize > 5000000)
+            return res
+                .status(442)
+                .json({ msg: "Image must be less than 5 MB" });
+
+        const filePath = `./public/images/${rooms.room_photo}`;
+        fs.unlinkSync(filePath);
+
+        file.mv(`./public/images/${fileName}`, (err) => {
+            if (err) return res.status(500).json({ msg: err.message });
+        });
+    }
+    const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+    const { room_code, room_name, room_description, room_price } = req.body;
+    try {
+        await Rooms.findOne({
+            where: {
+                id_room: req.params.id_room,
+            },
+        });
+        rooms.room_code = room_code;
+        rooms.room_name = room_name;
+        rooms.room_description = room_description;
+        rooms.room_price = room_price;
+        rooms.room_photo = fileName;
+        rooms.room_photo_path = url;
+
+        await rooms.save();
+        return res.status(200).json({ msg: "Room has been updated !" });
+    } catch (error) {
+        return res.status(500).json({ error: "Error ! cannot update" });
+    }
+};
+>>>>>>> 0dd5f69646504871ef31c376c64662f6673526d5

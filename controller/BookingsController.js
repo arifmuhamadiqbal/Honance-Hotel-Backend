@@ -17,13 +17,14 @@ export const getBookings = async (req, res) => {
 // add booking
 export const bookRoom = async (req, res) => {
     let bookDate = new Date().toISOString().slice(0, 10);
-    const id_room = req.body.id_room;
+    const id_room = req.body.idroom;
     const bUsername = req.body.username;
     const bEmail = req.body.email;
     const bPhone = req.body.nohp;
     const bCheckin = req.body.checkin;
     const bCheckout = req.body.checkout;
     const bookingFormat = bookDate + "-" + bUsername + "-" + bPhone;
+    const bTotal = req.body.total;
     try {
         const booking = await Bookings.create({
             booking_code: bookingFormat,
@@ -33,8 +34,10 @@ export const bookRoom = async (req, res) => {
             user_phone: bPhone,
             date_in: bCheckin,
             date_out: bCheckout,
+            total: bTotal,
         });
-        return res.json(booking);
+        console.log(booking);
+        return res.status(200).json();
     } catch (error) {
         return res.status(500).json(error.message);
     }
