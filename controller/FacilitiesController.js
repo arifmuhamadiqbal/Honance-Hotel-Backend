@@ -19,10 +19,10 @@ export const getFacilities = async (req, res) => {
 
 // add facilities
 export const addFacilities = async (req, res) => {
-    const facName = req.body.nameFacilities;
+    const facName = req.body.name_facilities;
     try {
         const facilities = await Facilities.create({
-            facilities_name: facName
+            name_facilities: facName
         });
         return res.json(facilities);
     } catch (error) {

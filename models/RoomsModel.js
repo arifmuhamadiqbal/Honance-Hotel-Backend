@@ -11,7 +11,7 @@ room_code
 room_name
 room_description
 room_price
-room_photo_path */
+room_photo */
 
 const Rooms = db.define(
     "rooms", {
