@@ -1,6 +1,5 @@
 import Rooms from "../models/RoomsModel.js";
-import path from "path";
-import fs from "fs";
+import { Op } from "sequelize";
 
 // get all room
 export const getRooms = async (req, res) => {
@@ -28,84 +27,62 @@ export const getRoomByID = async (req, res) => {
     }
 };
 
-// add room
-export const addRooms = async (req, res) => {
-    const codeRoom = req.body.kodeKamar;
-    const nameRoom = req.body.namaKamar;
-    const descriptionRoom = req.body.deskripsiKamar;
-    const priceRoom = req.body.hargaKamar;
-
-    // jika file tidak terbaca
-    if (req.files === null)
-        return res.status(404).json({ msg: "Image not found" });
-
-    console.log(req.files);
-    // get file
-    const file = req.files;
-    // ukuran file
-    const fileSize = file.data.length;
-    // ekstensi file
-    const ext = path.extname(file.name);
-    // file yang sudah terenskripsi + ekstensi
-    const fileName = file.md5 + ext;
-    // url untuk ke DB
-    const url = `${req.protocol}://${req.get("host")}/images/${fileName}}`;
-    // ekstensi yang diizinakan
-    const allowedExt = [".jpg", ".png", ".jpeg"];
-    // cek apakah ekstensi jpg, jpeg, atau png
-    // jika tidak sesuai maka akan ditolak
-    if (!allowedExt.includes(ext.toLowerCase()))
-        return res.status(442).json({ msg: "Image extension not allowed" });
-    // cek apakah ukuran image tidak lebih dari 5 MB
-    if (fileSize > 5000000)
-        return res.status(442).json({ msg: "Image must be less than 5 MB" });
-
-    const photoRoom = fileName;
-    const pathPhotoRoom = url;
-    console.log(codeRoom);
-    return;
+export const searchRoom = async (req, res) => {
     try {
-        const tambah = await Rooms.create({
-            room_code: codeRoom,
-            room_name: nameRoom,
-            room_description: descriptionRoom,
-            room_price: priceRoom,
-            room_photo: photoRoom,
-            room_photo_path: pathPhotoRoom,
+        const response = await Rooms.findAll({
+            where: {
+                room_price: {
+                    [Op.lte]: req.params.range_harga,
+                },
+            },
         });
-        console.log(tambah);
-        return res.status(200).json({ msg: "Kamar berhasil ditambahkan" });
+        if (!response) return res.status(404).json({ msg: "Data Not Found !" });
+        res.status(200).json(response);
     } catch (error) {
-        return res.status(500).json(error.message);
+        console.log(error.message);
     }
+};
 
-    // memasukkan gambar ke dalam folder images di dalam folder public
-    /* file.mv(`./public/images/${fileName}`, async (err) => {}); */
+// add Room
+export const addRoom = async (req, res) => {
+    let formatName = new Date().toISOString().slice(0, 10);
+    let codeRoom = req.body.kodeKamar;
+    let nameRoom = req.body.namaKamar;
+    let descriptionRoom = req.body.deskripsiKamar;
+    let priceRoom = req.body.hargaKamar;
+    let photoRoom = formatName + "-" + req.body.filename;
+
+    await Rooms.sequelize.query(
+        `INSERT INTO rooms (room_code, room_name, room_description, room_price, room_photo)
+    VALUES ("${codeRoom}", "${nameRoom}", "${descriptionRoom}", ${priceRoom}, "${photoRoom}");`,
+        (err, rows) => {
+            if (err) return res.status(500).json(err);
+            console.log("Data berhasil dihapus !");
+            return res.status(200).json(rows);
+        }
+    );
 };
 
 // delete room
 export const deleteRoomById = async (req, res) => {
-    const rooms = await Rooms.findOne({
-        where: {
-            id_room: req.params.id_room,
-        },
-    });
-    if (!rooms) return res.status(404).json({ msg: "Data not found !" });
     try {
+        const id = req.params.id_room;
+        const rooms = await Rooms.destroy({
+            where: {
+                id_room: id,
+            },
+        });
         // ambil gambar spesifik
         const filePath = `./public/images/${rooms.room_photo}`;
         // hapus gambar
         fs.unlinkSync(filePath);
         // hapus dari DB
-        await Rooms.destroy({
-            where: {
-                id_room: req.params.id_room,
-            },
-        });
-        await rooms.destroy();
+        await rooms.save();
         return res.json({ msg: "Room deleted !" });
     } catch (error) {
-        return res.status(500).json({ error: "Error ! cannot delete" });
+        return res
+            .status(500)
+            .json({ error: `Error ! cannot delete : ${error}` });
     }
 };
 
