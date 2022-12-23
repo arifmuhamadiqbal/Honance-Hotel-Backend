@@ -1,10 +1,16 @@
 import Rooms from "../models/RoomsModel.js";
 import { Op } from "sequelize";
+import Facilities from "../models/FacilitiesModel.js";
 
 // get all room
 export const getRooms = async (req, res) => {
     try {
-        let response = await Rooms.findAll();
+        let response = await Rooms.findAll({
+            include: {
+                model: Facilities,
+                attributes: ["name_facilities"],
+            },
+        });
         if (!response) return res.status(404).json({ msg: "Data Not Found !" });
         res.status(200).json(response);
     } catch (error) {

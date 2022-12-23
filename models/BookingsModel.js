@@ -47,12 +47,9 @@ const Bookings = db.define(
         }
     },
     {
+        freezeTableName: true,
         timestamps: false,
     }
 )
 
 export default Bookings;
-
-(async () => {
-    db.sync();
-});
