@@ -1,7 +1,11 @@
 import Rooms from "../models/RoomsModel.js";
+import { Op } from "sequelize";
 import Facilities from "../models/FacilitiesModel.js";
 import fs from "fs";
+<<<<<<< HEAD
 import RoomFacilities from "../models/RoomFacilitiesModel.js";
+=======
+>>>>>>> 7330518a1004457fd775beaa8bc44d3aa069b00a
 
 // get all room
 export const getRooms = async (req, res) => {
@@ -9,9 +13,9 @@ export const getRooms = async (req, res) => {
         let response = await Rooms.findAll({
             include: {
                 model: Facilities,
-                attributes: ["name_facilities"]
-            }
-        })
+                attributes: ["name_facilities"],
+            },
+        });
         if (!response) return res.status(404).json({ msg: "Data Not Found !" });
         res.status(200).json(response);
     } catch (error) {
@@ -19,6 +23,40 @@ export const getRooms = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
+=======
+//get room by ID
+export const getRoomByID = async (req, res) => {
+    try {
+        const response = await Rooms.findOne({
+            where: {
+                id_room: req.params.id_room,
+            },
+        });
+        if (!response) return res.status(404).json({ msg: "Data Not Found !" });
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+export const searchRoom = async (req, res) => {
+    try {
+        const response = await Rooms.findAll({
+            where: {
+                room_price: {
+                    [Op.lte]: req.params.range_harga,
+                },
+            },
+        });
+        if (!response) return res.status(404).json({ msg: "Data Not Found !" });
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+>>>>>>> 7330518a1004457fd775beaa8bc44d3aa069b00a
 // get room by Id
 export const getRoomById = async (req, res) => {
     const id = req.params.id_room
@@ -61,7 +99,41 @@ export const addRoom = async (req, res) => {
     } catch (error) {
         console.log(error.message);
     }
+<<<<<<< HEAD
+=======
+
+    /* await Rooms.sequelize.query(
+        `INSERT INTO rooms (room_code, room_name, room_description, room_price, room_photo)
+    VALUES ("${codeRoom}", "${nameRoom}", "${descriptionRoom}", ${priceRoom}, "${photoRoom}");`,
+        (err, rows) => {
+            if (err) return res.status(500).json(err);
+            console.log("Data berhasil dihapus !");
+            return res.status(200).json(rows);
+        }
+<<<<<<< HEAD
+    ); */
+>>>>>>> 7330518a1004457fd775beaa8bc44d3aa069b00a
 }
+=======
+    );
+};
+>>>>>>> 0dd5f69646504871ef31c376c64662f6673526d5
+
+// update room by Id
+export const updateRoomById = async (req, res) => {
+    const id = req.params.id_room;
+    try {
+        let response = await Rooms.findOne({
+            where: {
+                id_room: id
+            }
+        });
+        if (!response) return res.status(404).json({msg: "Data not found"});
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 
 // update room by Id
 export const updateRoomById = async (req, res) => { // ngambil parameter id room
@@ -134,10 +206,13 @@ export const deleteRoomById = async (req, res) => {
         await rooms.save();
         return res.json({ msg: "Room has been deleted !" });
     } catch (error) {
-        return res.status(500).json({ error: `Error ! cannot delete : ${error}` });
+        return res
+            .status(500)
+            .json({ error: `Error ! cannot delete : ${error}` });
     }
 };
 
+<<<<<<< HEAD
 
 // example code
 // update room by id
@@ -184,8 +259,103 @@ try {
     rooms.room_photo = fileName;
     rooms.room_photo_path = url;
 
+=======
+
+// example code
+// update room by id
+/* const rooms = await Rooms.findOne({
+    where: {
+        id_room: req.params.id_room,
+    }
+});
+if (!rooms) return res.status(404).json({ msg: "Data not found !" });
+let fileName = "";
+if (req.files === null) {
+    fileName = rooms.room_photo;
+} else {
+    const file = req.files.file;
+    const fileSize = file.data.length;
+    const ext = path.extname(file.name);
+    fileName = file.md5 + ext;
+    const allowedExt = [".jpg", ".png", ".jpeg"];
+
+    if (!allowedExt.includes(ext.toLocaleLowerCase()))
+        return res.status(442).json({ msg: "Image extension not allowed" });
+    if (fileSize > 5000000)
+        return res.status(442).json({ msg: "Image must be less than 5 MB" });
+
+    const filePath = `./public/images/${rooms.room_photo}`;
+    fs.unlinkSync(filePath);
+
+    file.mv(`./public/images/${fileName}`, (err) => {
+        if (err) return res.status(500).json({ msg: err.message });
+    });
+}
+const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+const { room_code, room_name, room_description, room_price } = req.body;
+try {
+    await Rooms.findOne({
+        where: {
+<<<<<<< HEAD
+            id_room: req.params.id_room
+        }
+=======
+            id_room: req.params.id_room,
+        },
+>>>>>>> 0dd5f69646504871ef31c376c64662f6673526d5
+    });
+    rooms.room_code = room_code;
+    rooms.room_name = room_name;
+    rooms.room_description = room_description;
+    rooms.room_price = room_price;
+    rooms.room_photo = fileName;
+    rooms.room_photo_path = url;
+
+<<<<<<< HEAD
+>>>>>>> 7330518a1004457fd775beaa8bc44d3aa069b00a
     await rooms.save();
     return res.status(200).json({ msg: "Room has been updated !" });
 } catch (error) {
     return res.status(500).json({ error: "Error ! cannot update" });
+<<<<<<< HEAD
 } */
+=======
+} */
+=======
+        if (!allowedExt.includes(ext.toLocaleLowerCase()))
+            return res.status(442).json({ msg: "Image extension not allowed" });
+        if (fileSize > 5000000)
+            return res
+                .status(442)
+                .json({ msg: "Image must be less than 5 MB" });
+
+        const filePath = `./public/images/${rooms.room_photo}`;
+        fs.unlinkSync(filePath);
+
+        file.mv(`./public/images/${fileName}`, (err) => {
+            if (err) return res.status(500).json({ msg: err.message });
+        });
+    }
+    const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+    const { room_code, room_name, room_description, room_price } = req.body;
+    try {
+        await Rooms.findOne({
+            where: {
+                id_room: req.params.id_room,
+            },
+        });
+        rooms.room_code = room_code;
+        rooms.room_name = room_name;
+        rooms.room_description = room_description;
+        rooms.room_price = room_price;
+        rooms.room_photo = fileName;
+        rooms.room_photo_path = url;
+
+        await rooms.save();
+        return res.status(200).json({ msg: "Room has been updated !" });
+    } catch (error) {
+        return res.status(500).json({ error: "Error ! cannot update" });
+    }
+};
+>>>>>>> 0dd5f69646504871ef31c376c64662f6673526d5
+>>>>>>> 7330518a1004457fd775beaa8bc44d3aa069b00a
