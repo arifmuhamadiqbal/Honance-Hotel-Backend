@@ -1,7 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { getRooms, addRoom, deleteRoomById, updateRoomById } from "../controller/RoomsController.js";
-import { addRoomFacilities } from "../controller/RoomFacilitiesController.js";
+import { getRooms, getRoomById, addRoom, deleteRoomById, updateRoomById } from "../controller/RoomsController.js";
 
 const roomsRoute = express.Router();
 
@@ -17,11 +16,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single("file");
 // end multer configuration
 
+// routes
 roomsRoute.get("/rooms", getRooms);
-roomsRoute.post("/tambahfasilitas", addRoomFacilities);
 roomsRoute.post("/addRoom", upload, addRoom);
-roomsRoute.delete("/delete/:id_room", deleteRoomById);
-roomsRoute.put("/update/:id_room", updateRoomById);
+roomsRoute.delete("/rooms/delete/:id_room", deleteRoomById);
+roomsRoute.put("/rooms/update/:id_room",upload, updateRoomById);
+roomsRoute.get("/rooms/:id_room", getRoomById);
 
 roomsRoute.get("/mainscreen");
 

@@ -19,10 +19,10 @@ export const getFacilities = async (req, res) => {
 
 // add facilities
 export const addFacilities = async (req, res) => {
-    const facName = req.body.nameFacilities;
+    const facName = req.body.name_facilities;
     try {
         const facilities = await Facilities.create({
-            facilities_name: facName
+            name_facilities: facName
         });
         return res.json(facilities);
     } catch (error) {
@@ -32,8 +32,8 @@ export const addFacilities = async (req, res) => {
 
 // delete facilities by Id
 export const deleteFacilitiesById = async (req, res) => {
+    const id = req.params.id_facilities;
     try {
-        const id = req.params.id_facilities;
         const facilities = await Facilities.destroy({
             where: {
                 id_facilities: id

@@ -4,6 +4,7 @@ import usersRoute from "./routes/UsersRoute.js";
 import roomsRoute from "./routes/RoomsRoute.js";
 import facilitiesRoute from "./routes/FacilitiesRoute.js";
 import bookingsRoute from "./routes/BookingsRoute.js";
+import roomFacRoute from "./routes/RoomFacilities.js";
 import db from "./config/Database.js";
 
 const port = 3020;
@@ -17,6 +18,7 @@ app.use(usersRoute);
 app.use(roomsRoute);
 app.use(facilitiesRoute);
 app.use(bookingsRoute);
+app.use(roomFacRoute);
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);

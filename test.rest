@@ -1,2 +1,23 @@
 ###
 GET http://localhost:3020/facilities
+
+
+###
+PUT http://localhost:3020/rooms/update/7
+Content-Type: application/json
+
+{
+    "newCode" : "TEST BARU",
+    "newName" : "test lg",
+    "newDesc" : "test2",
+    "newPrice" : 123,
+    "newFilename" : "awfaw"
+
+}
+
+
+###
+GET http://localhost:3020/rooms
+
+###
+GET http://localhost:3020/rooms/2
